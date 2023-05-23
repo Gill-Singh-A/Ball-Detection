@@ -4,7 +4,7 @@ import cv2, numpy #Importing cv2 for image processing and numpy for mathematical
 
 if __name__ == "__main__": # If this program is the main namespace then only run it
     video_capture = cv2.VideoCapture(0) # Selecting the Camera for Capturing video
-    while True: # Running the Program till ’q’ is pressed
+    while cv2.waitKey(1) != 113: # Running the Program till ’q’ is pressed
         ret, original_frame = video_capture.read() # ret -> return True if frame is successfully read, original_frame -> image given by the camera
         if not ret: # check if getting the frame is successful or not
             break # if not then break
@@ -18,7 +18,5 @@ if __name__ == "__main__": # If this program is the main namespace then only run
                 cv2.circle(original_frame, (h, k), r, (0, 255, 0), 2) # mark a circle with centre (h, k) and radius r to mark the detected ball
                 cv2.circle(original_frame, (h, k), 1, (0, 0, 255), 3) # mark a point at the centre of the circle above
         cv2.imshow("Ball Detection", original_frame) # Showing the image with marked balls if found
-        if cv2.waitKey(1) & 0xFF == ord('q'): # if key q is pressed then
-            break # break
     video_capture.release() # Release the Video Capture
     cv2.destroyAllWindows() # Destroy all the OpenCV windows created by this program during its runtime
