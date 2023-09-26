@@ -6,6 +6,7 @@ Language Used = Python3<br />
 Modules/Packages used:
 * cv2
 * numpy
+* math
 <!-- -->
 Install the dependencies:
 ```bash
