@@ -3,7 +3,8 @@
 import cv2, numpy, math
 
 sample_space = 5
-tolerence = 20
+tolerence = 10
+score_threshold = 1
 
 def dist(c_1, c_2):
     return math.sqrt((c_1[0]-c_2[0])**2+(c_1[1]-c_2[1])**2)
@@ -44,7 +45,7 @@ def detectBalls(frames):
     score = {j: score[j] for j in reversed(sorted(score, key=lambda i: score[i]))}
     if len(score) > 0:
         best_circle = list(score.keys())[0]
-        if score[best_circle] > 0:
+        if score[best_circle] > score_threshold:
             return reference_circles[best_circle]
         else:
             return None
@@ -52,6 +53,7 @@ def detectBalls(frames):
         return None
 
 if __name__ == "__main__":
+    point_history = []
     video_capture = cv2.VideoCapture(0)
     while cv2.waitKey(1) != 113:
         frames = []
@@ -63,8 +65,13 @@ if __name__ == "__main__":
             frames.append(frame)
         ball = detectBalls(frames)
         if ball != None:
+            point_history.append((ball[0], ball[1]))
             cv2.circle(frames[0], (ball[0], ball[1]), ball[2], (0, 255, 0), 2)
             cv2.rectangle(frames[0], (ball[0]-1, ball[1]-1), (ball[0]+1, ball[1]+1), (255, 0, 0), -1)
+        tracer_frame = frame.copy()
+        for point in point_history:
+            cv2.rectangle(tracer_frame, (point[0]-1, point[1]-1), (point[0]+1, point[1]+1), (0, 0, 255), -1)
         cv2.imshow("Ball Detection", frames[0])
+        cv2.imshow("Tracer", tracer_frame)
     video_capture.release()
     cv2.destroyAllWindows()
